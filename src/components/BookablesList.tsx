@@ -1,19 +1,34 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useReducer, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
-import { getBookables } from '../helpers/apiCalls'
+import { Bookable, getBookables } from '../helpers/apiCalls'
+import { ActionKind, bookableReducer } from '../reducers/bookableListReducer'
 
 import {days, sessions} from '../static-data.json'
 
+export type BookableState = {
+    group: string,
+    bookIndex: number,
+    showDetails: boolean,
+}
 
 const BookablesList = () => {
 
     const bookables = getBookables()
     let groups = bookables.map(book => (book.group))
-    const [group, setGroup] = useState(bookables[0].group)
-    const [bookIndex, setBookIndex] = useState(0)
+    const initialState: BookableState = {
+        group: groups[0],
+        bookIndex: 0,
+        showDetails: false,
+    }
+
+    const [state, dispatch] = useReducer(bookableReducer, initialState)
+    const {group, bookIndex, showDetails} = state
+    bookablesInGroup: bookables.filter(b => b.group === groups[0])
+    //const [group, setGroup] = useState(bookables[0].group)
+    //const [bookIndex, setBookIndex] = useState(0)
     const bookablesInGroup = bookables.filter(b => b.group === group)
     const bookable = bookablesInGroup[bookIndex]
-    const [showDetails, setShowDetails] = useState(false)
+    //const [showDetails, setShowDetails] = useState(false)
     groups = groups.reduce((ack, value) => {
         let contains = false
         ack.forEach(s => {
@@ -25,14 +40,17 @@ const BookablesList = () => {
     }, [] as string[])
 
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        setGroup(event.target.value)
-        setBookIndex(0)
+        dispatch({type: ActionKind.SET_GROUP, payload: event.target.value})
+        // setGroup(event.target.value)
+        // setBookIndex(0)
     }
 
     function handleNext() {
+        
         let next = (bookIndex === bookablesInGroup.length - 1)
                     ? 0 : bookIndex + 1
-        setBookIndex(next)
+        // setBookIndex(next)
+        dispatch({type: ActionKind.SET_BOOK, payload: next})
     }
 
     return (
@@ -47,7 +65,8 @@ const BookablesList = () => {
                     <ul>
                         {bookablesInGroup.map((value, index) => (
                             <li className={(index === bookIndex) ? "active m-2" : "m-2"} key={index}>
-                                <button onClick={() => setBookIndex(index)}
+                                <button onClick={() => dispatch({type: ActionKind.SET_BOOK,
+                                     payload: index})}
                                 className="btn btn-primary w-100" key={index}>{value.title}</button>
                             </li>
                         ))}
@@ -60,7 +79,7 @@ const BookablesList = () => {
                         <h2 className="d-inline">{bookable.title}</h2>
                         <span>
                             <input type="checkbox" name="check-details"  
-                            onChange={() => setShowDetails(!showDetails)}/>
+                            onChange={() => dispatch({type: ActionKind.TOGGLE_DETAILS})}/>
                             <label htmlFor="check-details">Show details</label>
                         </span>
                         <p>{bookable.notes}</p>
