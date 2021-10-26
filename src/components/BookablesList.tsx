@@ -20,15 +20,10 @@ const BookablesList = () => {
         bookIndex: 0,
         showDetails: false,
     }
-
     const [state, dispatch] = useReducer(bookableReducer, initialState)
     const {group, bookIndex, showDetails} = state
-    bookablesInGroup: bookables.filter(b => b.group === groups[0])
-    //const [group, setGroup] = useState(bookables[0].group)
-    //const [bookIndex, setBookIndex] = useState(0)
     const bookablesInGroup = bookables.filter(b => b.group === group)
     const bookable = bookablesInGroup[bookIndex]
-    //const [showDetails, setShowDetails] = useState(false)
     groups = groups.reduce((ack, value) => {
         let contains = false
         ack.forEach(s => {
@@ -41,15 +36,12 @@ const BookablesList = () => {
 
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         dispatch({type: ActionKind.SET_GROUP, payload: event.target.value})
-        // setGroup(event.target.value)
-        // setBookIndex(0)
     }
 
     function handleNext() {
         
         let next = (bookIndex === bookablesInGroup.length - 1)
                     ? 0 : bookIndex + 1
-        // setBookIndex(next)
         dispatch({type: ActionKind.SET_BOOK, payload: next})
     }
 

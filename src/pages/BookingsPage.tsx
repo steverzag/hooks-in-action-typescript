@@ -1,6 +1,8 @@
-
+import WeekPicker from "../components/WeekPicker"
 const BookingsPage = () => (
-    <div>Bookings</div>
+    <div>
+        <WeekPicker date={new Date()}/>
+    </div>
 )
 
 export default BookingsPage
