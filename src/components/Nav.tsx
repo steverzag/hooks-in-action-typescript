@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link, BrowserRouter } from 'react-router-dom'
 import { FaCalendar, FaUsers, FaDoorOpen } from 'react-icons/fa'
 import Routes from './Routes'
+import UserPicker from './UserPicker'
 
 const Nav = () => (
     <header>
@@ -12,7 +13,7 @@ const Nav = () => (
                 </button>
                 <a className="navbar-brand" href="#">Navbar</a>
 
-                <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <div className="collapse navbar-collapse">
                     <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                         <li className="nav-item active">
                             <Link to="/bookings" className="nav-link"><FaCalendar /><span>Bookings</span></Link>
@@ -25,6 +26,7 @@ const Nav = () => (
                         </li>
                     </ul>
                 </div>
+                <UserPicker/>
             </nav>
             <Routes/>
         </BrowserRouter>
